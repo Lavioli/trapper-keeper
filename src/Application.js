@@ -25,9 +25,31 @@ class S3Image extends Component {
   }
 }
 
+import { Storage } from 'aws-amplify';
+
+class S3Image extends Component {
+  state = { src: null };
+
+  async componentDidMount() {
+    const { s3key } = this.props;
+    const src = await Storage.get(s3key, { expires: 10 });
+    this.setState({ src });
+  }
+
+  render() {
+    const { src } = this.state;
+    if (!src) return null;
+    return (
+      <article>
+        <img src={src} />
+      </article>
+    );
+  }
+}
+
 class Application extends Component {
   state = {
-    files: []
+    files: [],
   };
 
   async componentDidMount() {
